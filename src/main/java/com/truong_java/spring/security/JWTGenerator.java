@@ -22,9 +22,9 @@ public class JWTGenerator {
 
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.ES512, SecurityConstants.JWT_SECRET)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -46,7 +46,7 @@ public class JWTGenerator {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
-            throw new AuthenticationCredentialsNotFoundException("JWT was exprired or incorrect",ex.fillInStackTrace());
+            throw new AuthenticationCredentialsNotFoundException("JWT was exprired or incorrect", ex.fillInStackTrace());
         }
     }
 }

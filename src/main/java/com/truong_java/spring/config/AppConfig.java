@@ -2,7 +2,7 @@ package com.truong_java.spring.config;
 
 import com.truong_java.spring.security.CustomUserDetails;
 import com.truong_java.spring.security.JWTAuthenticationFilter;
-import com.truong_java.spring.security.JwtAuthEntryPoint;
+import com.truong_java.spring.security.JWTAuthEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +21,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class AppConfig {
 
-    private JwtAuthEntryPoint jwtAuthEntryPoint;
+    private JWTAuthEntryPoint jwtAuthEntryPoint;
     private CustomUserDetails customUserDetails;
 
     @Autowired
-    public AppConfig(CustomUserDetails customUserDetails, JwtAuthEntryPoint jwtAuthEntryPoint) {
+    public AppConfig(CustomUserDetails customUserDetails, JWTAuthEntryPoint jwtAuthEntryPoint) {
         this.customUserDetails = customUserDetails;
         this.jwtAuthEntryPoint = jwtAuthEntryPoint;
     }
