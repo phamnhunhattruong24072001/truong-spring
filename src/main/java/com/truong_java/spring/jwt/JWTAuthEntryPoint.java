@@ -1,4 +1,4 @@
-package com.truong_java.spring.security;
+package com.truong_java.spring.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

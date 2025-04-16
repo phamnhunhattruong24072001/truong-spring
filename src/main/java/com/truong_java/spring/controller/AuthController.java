@@ -1,9 +1,11 @@
 package com.truong_java.spring.controller;
 
 import com.truong_java.spring.dto.AuthResponseDto;
+import com.truong_java.spring.dto.ChangePasswordDto;
 import com.truong_java.spring.dto.LoginDto;
 import com.truong_java.spring.dto.UserDto;
 import com.truong_java.spring.entity.UserEntity;
+import com.truong_java.spring.response.ApiResponse;
 import com.truong_java.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +30,18 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> login(@RequestBody LoginDto loginDto) {
         try {
             String token = userService.authenticateAndGenerateToken(loginDto.getUsername(), loginDto.getPassword());
-            return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+            return new ResponseEntity<>(ApiResponse.success("Đăng nhập thành công", new AuthResponseDto(token)), HttpStatus.OK);
         } catch (AuthenticationException ex) {
-            return new ResponseEntity<>(new AuthResponseDto("Đăng nhập thất bại"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ApiResponse.error(HttpStatus.UNAUTHORIZED.value(), "Đăng nhập thất bại"), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping(path = "/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        String changePassword = userService.changePassword(changePasswordDto);
+        return new ResponseEntity<>(changePassword, HttpStatus.OK);
     }
 }

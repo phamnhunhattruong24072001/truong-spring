@@ -1,9 +1,10 @@
 package com.truong_java.spring.service.impl;
 
+import com.truong_java.spring.dto.ChangePasswordDto;
 import com.truong_java.spring.dto.UserDto;
 import com.truong_java.spring.entity.UserEntity;
 import com.truong_java.spring.repository.UserRepository;
-import com.truong_java.spring.security.JWTGenerator;
+import com.truong_java.spring.jwt.JWTGenerator;
 import com.truong_java.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity register(UserDto userDto) {
         UserEntity user = new UserEntity();
         user.setEmail(userDto.getEmail());
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        user.setName(userDto.getName());
         user.setUsername(userDto.getUsername());
 
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
@@ -46,7 +48,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAllUsers() {
-        return List.of();
+        List<UserEntity> brands = userRepository.findAll();
+        return brands.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    private UserDto mapToDto(UserEntity user) {
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        return dto;
     }
 
     @Override
@@ -56,5 +70,26 @@ public class UserServiceImpl implements UserService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtGenerator.generateToken(authentication);
+    }
+
+    @Override
+    public String changePassword(ChangePasswordDto changePasswordDto) {
+        UserEntity user = userRepository.findByUsername(changePasswordDto.getUsername());
+        if (user == null) {
+            return "Invalid username";
+        }
+
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
+            return "Invalid old password";
+        }
+
+        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+            return "Passwords do not match";
+        }
+
+        String passwordEncoded = passwordEncoder.encode(changePasswordDto.getNewPassword());
+        user.setPassword(passwordEncoded);
+        userRepository.save(user);
+        return "Change password successful";
     }
 }

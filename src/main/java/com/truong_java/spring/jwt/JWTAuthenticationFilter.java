@@ -1,5 +1,6 @@
-package com.truong_java.spring.security;
+package com.truong_java.spring.jwt;
 
+import com.truong_java.spring.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

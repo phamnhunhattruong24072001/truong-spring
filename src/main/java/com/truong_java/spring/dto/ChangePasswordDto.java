@@ -6,28 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
-import java.math.BigDecimal;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
+public class ChangePasswordDto {
     @NotEmpty
-    private String name;
+    private String oldPassword;
 
     @NotEmpty
-    private BigDecimal price;
+    private String newPassword;
 
     @NotEmpty
-    private Long description;
+    private String confirmPassword;
 
     @NotEmpty
-    private Integer stock_quantity;
-
-    @NotEmpty
-    private Integer brand_id;
-
-    @NotEmpty
-    private Integer category_id;
+    private String username;
 }

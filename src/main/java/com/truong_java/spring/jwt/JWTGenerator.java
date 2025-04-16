@@ -1,5 +1,6 @@
-package com.truong_java.spring.security;
+package com.truong_java.spring.jwt;
 
+import com.truong_java.spring.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

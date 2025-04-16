@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -37,5 +38,41 @@ public class BrandRepositoryTest {
 
         Assertions.assertNotNull(allBrands);
         Assertions.assertEquals(2, allBrands.size());
+    }
+
+    @Test
+    public void BrandRepositoryTest_FindById_ReturnBrand() {
+        BrandEntity brand = BrandEntity.builder().name("Vin").build();
+
+        brandRepository.save(brand);
+
+        BrandEntity brandEntity = brandRepository.findById(brand.getId()).get();
+
+        Assertions.assertNotNull(brandEntity);
+    }
+
+    @Test
+    public void BrandRepositoryTest_UpdateBrand_ReturnBrandEntity() {
+        BrandEntity brand = BrandEntity.builder().name("Vin").build();
+
+        BrandEntity savedBrand = brandRepository.save(brand);
+
+        BrandEntity updatedBrand = BrandEntity.builder().id(savedBrand.getId()).name(savedBrand.getName()).build();
+
+        brandRepository.save(updatedBrand);
+
+        Assertions.assertNotNull(savedBrand);
+        Assertions.assertEquals(updatedBrand.getId(), savedBrand.getId());
+    }
+
+    @Test
+    public void BrandRepositoryTest_DeleteBrand_RemovesBrandFromDatabase() {
+        BrandEntity brand = BrandEntity.builder().name("Vin").build();
+        BrandEntity savedBrand = brandRepository.save(brand);
+
+        brandRepository.deleteById(savedBrand.getId());
+
+        Optional<BrandEntity> deletedBrand = brandRepository.findById(savedBrand.getId());
+        Assertions.assertTrue(deletedBrand.isEmpty());
     }
 }

@@ -1,8 +1,8 @@
 package com.truong_java.spring.config;
 
 import com.truong_java.spring.security.CustomUserDetails;
-import com.truong_java.spring.security.JWTAuthenticationFilter;
-import com.truong_java.spring.security.JWTAuthEntryPoint;
+import com.truong_java.spring.jwt.JWTAuthenticationFilter;
+import com.truong_java.spring.jwt.JWTAuthEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +47,7 @@ public class AppConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/api/auth/change-password").authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
                 .anyRequest().authenticated()
             )
