@@ -5,7 +5,6 @@ import com.truong_java.spring.dto.ChangePasswordDto;
 import com.truong_java.spring.dto.LoginDto;
 import com.truong_java.spring.dto.UserDto;
 import com.truong_java.spring.entity.UserEntity;
-import com.truong_java.spring.response.ApiResponse;
 import com.truong_java.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController extends BaseController {
     private UserService userService;
 
     @Autowired
@@ -26,22 +25,22 @@ public class AuthController {
     @PostMapping(path = "/register")
     public ResponseEntity<?> register(@RequestBody UserDto userDto) {
         UserEntity register = userService.register(userDto);
-        return new ResponseEntity<>(register, HttpStatus.OK);
+        return ok(register);
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<ApiResponse<AuthResponseDto>> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             String token = userService.authenticateAndGenerateToken(loginDto.getUsername(), loginDto.getPassword());
-            return new ResponseEntity<>(ApiResponse.success("Đăng nhập thành công", new AuthResponseDto(token)), HttpStatus.OK);
+            return ok("Đăng nhập thành công", new AuthResponseDto(token));
         } catch (AuthenticationException ex) {
-            return new ResponseEntity<>(ApiResponse.error(HttpStatus.UNAUTHORIZED.value(), "Đăng nhập thất bại"), HttpStatus.UNAUTHORIZED);
+            return error(HttpStatus.UNAUTHORIZED, "Đăng nhập thất bại");
         }
     }
 
     @PostMapping(path = "/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         String changePassword = userService.changePassword(changePasswordDto);
-        return new ResponseEntity<>(changePassword, HttpStatus.OK);
+        return ok(changePassword);
     }
 }

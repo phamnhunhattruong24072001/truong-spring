@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/brand")
-public class BrandController {
+public class BrandController extends BaseController {
     private BrandService brandService;
 
     @Autowired
@@ -21,39 +21,43 @@ public class BrandController {
         this.brandService = brandService;
     }
 
-    @GetMapping(path = "/list")
-    public ResponseEntity<List<BrandDto>> list() {
+    @GetMapping("/list")
+    public ResponseEntity<?> list() {
         List<BrandDto> brands = brandService.getAllBrands();
-        return new ResponseEntity<>(brands, HttpStatus.OK);
+        return ok(brands);
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody BrandDto brandDto) {
         BrandEntity created = brandService.createBrand(brandDto);
         if (created == null) {
-            return new ResponseEntity<>("Create error", HttpStatus.BAD_REQUEST);
+            return error(HttpStatus.BAD_REQUEST, "Tạo brand thất bại");
         }
-        return new ResponseEntity<>(created, HttpStatus.OK);
+        return ok("Tạo brand thành công", created);
     }
 
-    @GetMapping(path = "/show/{id}")
-    public ResponseEntity<Optional<BrandDto>> show(@PathVariable("id") Long id) {
+    @GetMapping("/show/{id}")
+    public ResponseEntity<?> show(@PathVariable("id") Long id) {
         Optional<BrandDto> brand = brandService.getBrandById(id);
-        return new ResponseEntity<>(brand, HttpStatus.OK);
+        if (brand.isPresent()) {
+            return ok("Lấy brand thành công", brand.get());
+        } else {
+            return error(HttpStatus.NOT_FOUND, "Brand không tồn tại");
+        }
     }
 
-    @PostMapping(path = "/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<?> update(@RequestBody BrandDto brandDto, @PathVariable("id") Long id) {
         BrandEntity updated = brandService.updateBrand(brandDto, id);
         if (updated == null) {
-            return new ResponseEntity<>("Updated error", HttpStatus.BAD_REQUEST);
+            return error(HttpStatus.BAD_REQUEST, "Cập nhật brand thất bại");
         }
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        return ok("Cập nhật brand thành công", updated);
     }
 
-    @GetMapping(path = "/delete/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         brandService.deleteBrand(id);
-        return new ResponseEntity<>("Deleted Brand Success", HttpStatus.OK);
+        return ok("Xoá brand thành công", null);
     }
 }

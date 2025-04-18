@@ -59,6 +59,12 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public BrandEntity getBrandEntityById(Long id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Brand không tồn tại"));
+    }
+
+    @Override
     public void deleteBrand(Long id) {
         Optional<BrandEntity> brandEntity = brandRepository.findById(id);
         brandEntity.ifPresent(entity -> brandRepository.delete(entity));

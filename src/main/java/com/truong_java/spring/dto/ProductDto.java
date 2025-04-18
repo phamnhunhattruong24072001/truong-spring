@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
+    private Long id;
+
     @NotEmpty
     private String name;
 
@@ -26,8 +28,8 @@ public class ProductDto {
     private Integer stock_quantity;
 
     @NotEmpty
-    private Integer brand_id;
+    private Long brand_id;
 
     @NotEmpty
-    private Integer category_id;
+    private Long category_id;
 }

@@ -11,5 +11,6 @@ public interface BrandService {
     BrandEntity createBrand(BrandDto brandDto);
     Optional<BrandDto> getBrandById(Long id);
     BrandEntity updateBrand(BrandDto brandDto, Long id);
+    BrandEntity getBrandEntityById(Long id);
     void deleteBrand(Long id);
 }
