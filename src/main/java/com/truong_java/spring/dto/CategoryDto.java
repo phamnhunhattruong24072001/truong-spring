@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotEmpty;
 public class CategoryDto {
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "Tên danh mục không được để trống")
+    @Size(min = 2, max = 100, message = "Tên danh mục phải từ 2 đến 100 ký tự")
     private String name;
 }

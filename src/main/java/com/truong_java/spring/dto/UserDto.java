@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -12,16 +13,18 @@ import javax.validation.constraints.NotEmpty;
 public class UserDto {
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "Tên không được để trống")
     private String name;
 
-    @NotEmpty(message = "Email should not be empty")
-    @Email
+    @NotEmpty(message = "Email không được để trống")
+    @Email(message = "Email không đúng định dạng")
     private String email;
 
-    @NotEmpty(message = "Username should not be empty")
+    @NotEmpty(message = "Tên đăng nhập không được để trống")
+    @Size(min = 4, max = 20, message = "Tên đăng nhập phải từ 4 đến 20 ký tự")
     private String username;
 
-    @NotEmpty(message = "Password should not be empty")
+    @NotEmpty(message = "Mật khẩu không được để trống")
+    @Size(min = 6, max = 32, message = "Mật khẩu phải từ 6 đến 32 ký tự")
     private String password;
 }
